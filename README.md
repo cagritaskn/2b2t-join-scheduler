@@ -9,7 +9,7 @@ This app launches Minecraft and then joins the 2B2T server at the specified time
 -Video Settings > Fullscreen: ON
 Adjust these once and then exit Minecraft before running the scheduler.**
 
-> [NOTE]
+> [!NOTE]
 > The app is using static coordinates to automate clicking for now. So the Fullscreen and GUI Scale settings are must to have. Also the Minecraft Launcher window should be maximized and the game profile (version or maybe the cheat client e.g. "fabric-1.21.1") must be selected before running the app in order to make it work properly. I'm planning on making it work with text recognition so the app could work at any resolutions.
 
 # Usage
