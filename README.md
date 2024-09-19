@@ -18,7 +18,7 @@ Adjust these settings before **running the scheduler**.
 > Both Minecraft Launcher and Minecraft Client languages should be English (US). If you don't set them into English, the app won't recognise the buttons to click. Also the game profile (version or maybe the cheat client e.g. "fabric-1.21.1") must be selected in the Minecraft Launcher before running the app in order to make it work properly. Make sure the buttons in the client are in default style.
 
 > [!NOTE]
-> The app was tested in GUI Scale: 2, default button styles (no themes). Even without these variables the app could work but not tested yet.
+> The app was tested in GUI Scale: 2, default button styles (no themes). Even with the change of these variables the app could work but haven't been tested yet.
 
 # Usage
 - Download [2B2T-Scheduler.exe](https://github.com/cagritaskn/2b2t-join-scheduler/releases/download/releasev1.1/2B2T-Scheduler.exe).
