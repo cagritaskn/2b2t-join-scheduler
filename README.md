@@ -1,3 +1,5 @@
+<p align="center"><img src="logo.png" width="128" height="128"></p>
+
 # About
 This app launches Minecraft and then joins the 2B2T server at the specified time. It's open source, you can inspect the code and decide whether it's clean or not or even build it yourself.
 - Screenshot:
@@ -5,31 +7,34 @@ This app launches Minecraft and then joins the 2B2T server at the specified time
 
 # Requirements
 **This settings are required to make the app work:**
-- Launcher: Minecraft Launcher (The Minecraft Launcher window should be maximized and the game profile should be selected)
-- Resolution: 1920x1080
-- Video Settings > GUI Scale: 2
-- Video Settings > Fullscreen: ON
+- Launcher: Minecraft Launcher (The Minecraft Launcher window should be maximized and the game profile should be selected.) (Don't worry if you have installed the Minecraft in a different than the default directory, the app lets you choose it if it can't find it.)
+- Video Settings > GUI Scale: 2 (Might work on other scales but it has been tested on this scale.)
+- Both Minecraft Launcher and Minecraft Client languages should be English (US).
+- If you have a Minecraft Client custom theme that changes the visuals of the buttons, disable it.
 
-Adjust these once and then exit Minecraft before **running the scheduler**.
+Adjust these settings before **running the scheduler**.
+
+> [!IMPORTANT]
+> Both Minecraft Launcher and Minecraft Client languages should be English (US). If you don't set them into English, the app won't recognise the buttons to click. Also the game profile (version or maybe the cheat client e.g. "fabric-1.21.1") must be selected in the Minecraft Launcher before running the app in order to make it work properly. Make sure the buttons in the client are in default style.
 
 > [!NOTE]
-> The app is using static coordinates to automate clicking for now. So the Fullscreen and GUI Scale settings are must to have. Also the Minecraft Launcher window should be maximized and the game profile (version or maybe the cheat client e.g. "fabric-1.21.1") must be selected before running the app in order to make it work properly. I'm planning on making it work with text recognition so the app could work at any resolutions.
+> The app was tested in GUI Scale: 2, default button styles (no themes). Even without these variables the app could work but not tested yet.
 
 # Usage
-- Download [2B2T-Scheduler.exe](https://github.com/cagritaskn/2b2t-join-scheduler/releases/download/release/2B2T-Scheduler.exe).
+- Download [2B2T-Scheduler.exe](https://github.com/cagritaskn/2b2t-join-scheduler/releases/download/releasev1.1/2B2T-Scheduler.exe).
 - Set the requirements in the **Requirements** title above for app to work properly.
-- Open the [2B2T-Scheduler.exe](https://github.com/cagritaskn/2b2t-join-scheduler/releases/download/release/2B2T-Scheduler.exe) and specify the time then click on Activate.
+- Open the [2B2T-Scheduler.exe](https://github.com/cagritaskn/2b2t-join-scheduler/releases/download/releasev1.1/2B2T-Scheduler.exe) and specify the time then click on **Activate**.
 
 # Running the app as a Python script
-Download the [schedulerapp.py](https://github.com/cagritaskn/2b2t-join-scheduler/blob/main/schedulerapp.py) , open a command prompt in it's directory and run the command:
+Clone the repository, go into the directory where schedulerapp.py is located, open a command prompt in it's directory and run the command:
 ```
 python schedulerapp.py
 ```
 
-Or you can turn it into an exe by opening a command prompt in it's directory and running the command:
+Or you can turn it into an exe by opening a command prompt in it's directory (the directory where schedulerapp.py is located) and running the command:
 
 ```
-pyinstaller --onefile --windowed schedulerapp.py
+pyinstaller schedulerapp.spec
 ```
 
 # Contact
