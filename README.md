@@ -7,7 +7,7 @@ This app launches Minecraft and then joins the 2B2T server at the specified time
 
 # Requirements
 **This settings are required to make the app work:**
-- Launcher: Official Xbox Minecraft Launcher (The game profile should be selected e.g. "fabric-1.21.1") (Don't worry if you have installed the Minecraft in a different than the default directory, the app lets you choose it if it can't find it. Minecraft.exe is generally located in "XboxGames\Minecraft Launcher\Content\Minecraft.exe")
+- Launcher: Official Xbox Minecraft Launcher (The game profile should be selected e.g. "fabric-1.21.1") (Don't worry if you have installed the Minecraft in a different than the default directory, the app lets you choose the Minecraft.exe if the app can't find it itself. Minecraft.exe is generally located in "XboxGames\Minecraft Launcher\Content\Minecraft.exe")
 - Video Settings > GUI Scale: 2 (Might work on other scales but it has been tested on this scale.)
 - Both Minecraft Launcher and Minecraft Client languages should be English (US).
 - If you have a Minecraft Client custom theme that changes the visuals of the buttons, disable it.
