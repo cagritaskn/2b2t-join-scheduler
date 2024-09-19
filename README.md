@@ -9,6 +9,7 @@ This app launches Minecraft and then joins the 2B2T server at the specified time
 - Resolution: 1920x1080
 - Video Settings > GUI Scale: 2
 - Video Settings > Fullscreen: ON
+
 Adjust these once and then exit Minecraft before **running the scheduler**.
 
 > [!NOTE]
