@@ -3,10 +3,10 @@ This app launches Minecraft and then joins the 2B2T server at the specified time
 
 # Requirements
 **This settings are required to make the app work:
--Launcher: Minecraft Launcher (The Minecraft Launcher window should be maximized and the game profile should be selected)
--Resolution: 1920x1080
--Video Settings > GUI Scale: 2
--Video Settings > Fullscreen: ON
+- Launcher: Minecraft Launcher (The Minecraft Launcher window should be maximized and the game profile should be selected)
+- Resolution: 1920x1080
+- Video Settings > GUI Scale: 2
+- Video Settings > Fullscreen: ON
 Adjust these once and then exit Minecraft before running the scheduler.**
 
 > [!NOTE]
