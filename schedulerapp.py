@@ -4,8 +4,12 @@ import subprocess
 import time
 import threading
 import pyautogui
-import configparser  # Import configparser module
-import os  # Import os module for file path operations
+import configparser
+import os
+import pygetwindow as gw
+import cv2
+import numpy as np
+import sys
 
 # Global variable to control the scheduled task
 stop_thread = False
@@ -67,6 +71,44 @@ def check_minecraft_exe():
         else:
             browse_minecraft_exe()
 
+# Function to get the base path for bundled files
+def get_base_path():
+    if getattr(sys, 'frozen', False):
+        # Running as a frozen executable
+        return sys._MEIPASS
+    else:
+        # Running as a script
+        return os.path.dirname(os.path.abspath(__file__))
+
+# Function to locate and click on a button using image recognition
+def click_button(image_name):
+    base_path = get_base_path()
+    image_path = os.path.join(base_path, image_name)
+    screen = pyautogui.screenshot()
+    screen_np = cv2.cvtColor(np.array(screen), cv2.COLOR_RGB2BGR)
+    button_img = cv2.imread(image_path, cv2.IMREAD_UNCHANGED)
+    
+    # Convert both images to grayscale
+    screen_gray = cv2.cvtColor(screen_np, cv2.COLOR_BGR2GRAY)
+    button_gray = cv2.cvtColor(button_img, cv2.COLOR_BGR2GRAY)
+
+    # Use adaptive thresholding to improve recognition
+    screen_threshold = cv2.adaptiveThreshold(screen_gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 11, 2)
+    button_threshold = cv2.adaptiveThreshold(button_gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 11, 2)
+
+    # Match template and find all the matching locations
+    result = cv2.matchTemplate(screen_threshold, button_threshold, cv2.TM_CCOEFF_NORMED)
+    min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
+
+    # Only click if the best match confidence is above a certain threshold (e.g., 0.7)
+    if max_val >= 0.7:
+        # Calculate the center of the best matching location
+        best_match = (max_loc[0] + button_img.shape[1] // 2, max_loc[1] + button_img.shape[0] // 2)
+        pyautogui.click(best_match)
+        return True
+
+    return False
+
 # Launching Minecraft
 def start_minecraft():
     global stop_thread
@@ -88,7 +130,7 @@ def start_minecraft():
                 subprocess.Popen(minecraft_exe_path)
                 time.sleep(10)  # Wait for Minecraft to launch
             else:
-                messagebox.showerror("Launcher Not Found", "Minecraft.exe not found (This is the name of the .exe of the Minecraft Launcher). Please configure the correct path. It's generally located in the XboxGames\Minecraft\Content\ folder.")
+                messagebox.showerror("Launcher Not Found", "Minecraft.exe not found. Please configure the correct path.")
                 stop_thread = True
     except Exception as e:
         messagebox.showerror("Error", f"An error occurred while launching Minecraft: {e}")
@@ -99,20 +141,39 @@ def join_server():
     global stop_thread
     status_label.config(text=f"Running the automation...", fg="green", bg="black")
     time.sleep(20)  # Wait for Minecraft to load
-    pyautogui.click(1060, 740)  # Play
+
+    # Click on the "Play" button
+    if click_button("play_button.png"):
+        print("Clicked Play button.")
+    else:
+        print("Play button not found.")
+
     time.sleep(90)
-    pyautogui.click(960, 425)  # Multiplayer
+
+    # Click on the "Multiplayer" button
+    if click_button("multiplayer_button.png"):
+        print("Clicked Multiplayer button.")
+    else:
+        print("Multiplayer button not found.")
+
     time.sleep(3)
-    pyautogui.click(960, 995)  # Direct Connect
+
+    # Click on the "Direct Connect" button
+    if click_button("direct_connect_button.png"):
+        print("Clicked Direct Connect button.")
+    else:
+        print("Direct Connect button not found.")
+
     time.sleep(3)
     pyautogui.hotkey('ctrl', 'a')  # Select All
     time.sleep(3)
-    
+
     pyautogui.write(server_address)  # IP
     time.sleep(3)
     pyautogui.press('enter')  # Connect
     time.sleep(3)
     stop_thread = True
+    status_label.config(text=f"Joined the server successfully.", fg="green", bg="black")
 
     while not stop_thread:
         time.sleep(1)  # Keep the thread alive
@@ -139,14 +200,19 @@ def scheduled_start():
         toggle_button.config(text="Activate")
         return
 
-    messagebox.showinfo("Info", f"Minecraft will start at {target_hour:02}:{target_minute:02}.")
+    # Format hour and minute with leading zero if necessary
+    formatted_hour = f"{target_hour:02}"
+    formatted_minute = f"{target_minute:02}"
+
+    messagebox.showinfo("Info", f"Minecraft will start at {formatted_hour}:{formatted_minute}.")
     
     # Save the settings
-    save_settings(target_hour, target_minute, minecraft_exe_path)
+    save_settings(formatted_hour, formatted_minute, minecraft_exe_path)
 
     while not stop_thread:
         current_time = time.localtime()
-        if current_time.tm_hour == target_hour and current_time.tm_min == target_minute:
+        if (current_time.tm_hour == target_hour and
+            current_time.tm_min == target_minute):
             start_minecraft()
             join_server()
             break
@@ -162,7 +228,9 @@ def update_status_with_dots(selected_hour, selected_minute):
     global stop_thread
     dots = ""
     while not stop_thread:
-        status_label.config(text=f"Active ({selected_hour}:{selected_minute}){dots}", fg="green")
+        formatted_hour = f"{int(selected_hour):02}"
+        formatted_minute = f"{int(selected_minute):02}"
+        status_label.config(text=f"Active ({formatted_hour}:{formatted_minute}){dots}", fg="green")
         dots = "." * ((len(dots) + 1) % 4)  # Cycle through 0 to 3 dots
         time.sleep(1)  # Wait for 1 second before updating
 
@@ -184,16 +252,13 @@ def toggle_activation():
             status_label.config(text="Deactivated", fg="red", bg="black")
             toggle_button.config(text="Activate")
 
-
-
-
 # Quit function with confirmation dialog
 def quit_application():
     global stop_thread
     if messagebox.askyesno("Confirm Quit", "Are you sure you want to quit?"):
         # Stop the thread
         stop_thread = True
-        app.quit()
+        os._exit(0)
 
 # Validate only numeric input for hour and minute
 def validate_numeric_input(P):
@@ -203,12 +268,20 @@ def validate_numeric_input(P):
         return True
     return False
 
+# Format hour and minute with leading zero if necessary
+def format_entry(event):
+    value = event.widget.get()
+    if len(value) == 1 and value.isdigit():
+        event.widget.delete(0, tk.END)
+        event.widget.insert(0, f"0{value}")
+
 # GUI setup
 app = tk.Tk()
 app.title("2B2T Join Scheduler")
 app.geometry("300x230")  # Make the app window bigger
 app.configure(background='black')
 app.resizable(False, False)
+app.iconbitmap(os.path.join(get_base_path(), 'icon.ico'))
 
 # Default Minecraft path
 minecraft_exe_path = "C:\\XboxGames\\Minecraft Launcher\\Content\\Minecraft.exe"
@@ -221,10 +294,12 @@ vcmd = (app.register(validate_numeric_input), '%P')
 tk.Label(app, text="Hour:", fg="white", bg="black", font=("Arial", 10, "bold")).pack(pady=(10, 0))
 hour_entry = tk.Entry(app, validate='key', validatecommand=vcmd, fg="white", bg="black", font=("Arial", 10, "bold"), justify='center', width=5)
 hour_entry.pack(pady=(0, 10))
+hour_entry.bind("<FocusOut>", format_entry)
 
 tk.Label(app, text="Minute:", fg="white", bg="black", font=("Arial", 10, "bold")).pack(pady=(5, 0))
 minute_entry = tk.Entry(app, validate='key', validatecommand=vcmd, fg="white", bg="black", font=("Arial", 10, "bold"), justify='center', width=5)
 minute_entry.pack(pady=(0, 5))
+minute_entry.bind("<FocusOut>", format_entry)
 
 # Load settings when the app starts
 load_settings()
