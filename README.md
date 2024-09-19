@@ -1,7 +1,7 @@
 # About
 This app launches Minecraft and then joins the 2B2T server at the specified time. It's open source, you can inspect the code and decide whether it's clean or not or even build it yourself.
-Screenshot:
-<img src="files/screenshot.png" width="256" >
+- Screenshot:
+<img src="screenshot.png" width="256" >
 
 # Requirements
 **This settings are required to make the app work:
